@@ -1,0 +1,15 @@
+[project]
+name = "storeappeldar"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.13"
+dependencies = [
+    "webdriver-manager",
+    "pymysql",
+    "flask",
+    "selenium",
+    "requests",
+    "cryptography",
+    "pytest",
+    "webdriver-manager>=4.1.2",
+]

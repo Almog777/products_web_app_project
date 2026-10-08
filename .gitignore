@@ -1,0 +1,19 @@
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/
+env/
+venv/
+
+# Pytest cache
+.pytest_cache/
+
+# IDE settings
+.idea/
+.vscode/
+
+# Database files
+*.db
+*.sqlite3
