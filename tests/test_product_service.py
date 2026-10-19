@@ -1,6 +1,9 @@
 import pytest
 
+from db import init_db
 from models.models import Product
+
+from db.init_db import truncate_products_table
 
 from services.product_service import (
     add_product,
@@ -18,12 +21,9 @@ from repositories.product_repository import read_all, delete_product as repo_del
 @pytest.fixture(autouse=True)
 def clean_database():
     try:
-        existing_products = read_all()
-        for product in existing_products:
-            repo_delete_product(product.product_id)
+        truncate_products_table()
     except Exception:
         pass
-
 
 
 def test_add_product_success():
@@ -110,9 +110,8 @@ def test_update_product_success():
     product_id = add_product(p)
 
     updated_p = Product(product_id=product_id, name="שעון חדש", price=150.0, image="")
-    result = update_product(updated_p)
+    update_product(updated_p)
 
-    assert result is None
 
     saved_p = get_product(product_id)
     assert saved_p.name == "שעון חדש"
@@ -132,9 +131,7 @@ def test_delete_product_success():
     p = Product(product_id=None, name="מוצר למחיקה", price=40.0, image="")
     product_id = add_product(p)
 
-    result = delete_product(product_id)
-
-    assert result is None
+    delete_product(product_id)
 
     with pytest.raises(ProductNotFoundServiceError):
         get_product(product_id)

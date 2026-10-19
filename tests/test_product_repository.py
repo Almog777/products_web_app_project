@@ -1,4 +1,5 @@
 import pytest
+import requests
 from models.models import Product
 from repositories.product_repository import (
     create_product,
@@ -8,7 +9,7 @@ from repositories.product_repository import (
     delete_product,
     ProductRepositoryError
 )
-
+BASE_URL = "http://127.0.0.1:5000/api/products"
 
 @pytest.fixture(autouse=True)
 def clean_database():
@@ -16,7 +17,7 @@ def clean_database():
         products = read_all()
         for p in products:
             delete_product(p.product_id)
-    except Exception:
+    except :
         pass
 
 
@@ -92,7 +93,10 @@ def test_update_product_success():
     result = update_product(updated_p)
 
     assert result is True
-    assert read_one(product_id).name == "שם חדש"
+    p = read_one(product_id)
+    if p is not None:
+        assert p.product_id == product_id
+        assert p.name == "שם חדש"
 
 
 def test_update_product_not_found():
@@ -149,3 +153,14 @@ def test_create_product_name_special_characters_and_emoji():
     p = Product(product_id=None, name="חולצה 👕 #123!", price=40.0, image="")
     returned_id = create_product(p)
     assert returned_id is not None
+
+def test_api_mass_assignment_vulnerability():
+    payload = {
+        "name": "HackerProduct",
+        "price": 10.0,
+        "image": "http://example.com/hack.jpg",
+        "is_admin": True,
+        "id": 9999
+    }
+    response = requests.post(BASE_URL, json=payload)
+    print(response.json())

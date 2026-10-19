@@ -2,8 +2,6 @@ from typing import List
 import pymysql as sql
 from config.app_config import db_connection_kwargs
 from models.models import Product
-
-
 class ProductRepositoryError(Exception): pass
 
 
